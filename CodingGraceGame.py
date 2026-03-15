@@ -440,7 +440,59 @@ def green_magic_room(player_info_arg):
         print("The magician waves his hand and you are whisked away...\n")
         return "flee"
 
+def purple_room_of_chance(player_info_arg):
+    print("Welcome to the purple room of chance")
+    print("Prepare yourself to play a game of higher or lower")
+    print("If you win, you will receive a lucky clover")
+    print("If you do not win, you will return to the start of the game.\n")
+    room_name = "Purple Room of Chance"
+    player_info_arg["location"] = room_name
+    
+    player_info_arg["health"] -= 5 
+    
+    player_info_arg["choices"].append(room_name)
+    
+    show_player_info(player_info_arg)
 
+    import random
+    lucky_number = random.randint(1, 100)
+    guess_damage = 10
+    
+    print("\nI'm thinking of a number between 1 and 100.")
+    print("Each wrong guess costs 10 health. If you , type 'flee'.")
+
+    while player_info_arg["health"] > 0:
+        guess = input("\nWhat is your guess (or type 'flee')? ").strip().lower()
+
+        if guess == "flee":
+            print("You decide not to push your luck and attempt to flee!")
+            return "flee"
+
+        if not guess.isdigit():
+            print("That's not a number!")
+            continue
+
+        guess = int(guess)
+
+        if guess == lucky_number:
+            print(f"Lucky! {lucky_number} was the correct number.")
+            item = "Lucky Clover"
+            if item not in player_info_arg["inventory"]:
+                player_info_arg["inventory"].append(item)
+                print(f"--- You found a {item}! ---")
+            break
+        elif guess < lucky_number:
+            print("Too low! Better luck next time...")
+        else:
+            print("Too high! Might want to turn it down a notch")
+        
+        player_info_arg["health"] -= guess_damage
+        print(f"Health remaining: {player_info_arg['health']}")
+
+    if player_info_arg["health"] <= 0:
+        you_died("Your luck ran out. The Purple Room claims another unlucky traveler.")
+
+    return player_info_arg
 # ===========================================================================
 # CONTROL FUNCTIONS
 # ===========================================================================
