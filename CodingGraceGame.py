@@ -439,59 +439,79 @@ def green_magic_room(player_info_arg):
         print("The magician waves his hand and you are whisked away...\n")
         return "flee"
 
-def purple_room_of_chance(player_info_arg):
-    print("Welcome to the purple room of chance")
-    print("Prepare yourself to play a game of higher or lower")
-    print("If you win, you will receive a lucky clover")
-    print("If you do not win, you will return to the start of the game.\n")
-    room_name = "Purple Room of Chance"
-    player_info_arg["location"] = room_name
+import time
+def number_guesssing_game():    
+    number_to_guess = random.randint(1, 20)
+    attempts = 0
+    max_attempts = 5
+    while attempts < max_attempts:
+        try:
+            guess = int(input("Enter the number between 1 and 20: "))
+            attempts += 1
+            if guess < number_to_guess:
+                print("Too low! Try again.")
+            elif guess > number_to_guess:
+                print("Too high! Try again.")
+            elif guess == number_to_guess:
+                print(f"Congratulations! You guessed the number in {attempts} attempts!")
+                return True
+        except ValueError:  
+            print("Invalid input. Please enter a valid number.")
+    print(f"You failed! The number was {number_to_guess}.")
+    return False
+
+
+def black_magic_room(player_info_arg):
+#black magic room play a game of guess the number, 
+#guess the number in less than 5 tries to win, otherwise you lose and receive a punishment
+    print("Welcome to the black magic room.")
     
-    player_info_arg["health"] -= 5 
-    
-    player_info_arg["choices"].append(room_name)
-    
-    show_player_info(player_info_arg)
-
-    import random
-    lucky_number = random.randint(1, 100)
-    guess_damage = 10
-    
-    print("\nI'm thinking of a number between 1 and 100.")
-    print("Each wrong guess costs 10 health. If you , type 'flee'.")
-
-    while player_info_arg["health"] > 0:
-        guess = input("\nWhat is your guess (or type 'flee')? ").strip().lower()
-
-        if guess == "flee":
-            print("You decide not to push your luck and attempt to flee!")
-            return "flee"
-
-        if not guess.isdigit():
-            print("That's not a number!")
-            continue
-
-        guess = int(guess)
-
-        if guess == lucky_number:
-            print(f"Lucky! {lucky_number} was the correct number.")
-            item = "Lucky Clover"
-            if item not in player_info_arg["inventory"]:
-                player_info_arg["inventory"].append(item)
-                print(f"--- You found a {item}! ---")
-            break
-        elif guess < lucky_number:
-            print("Too low! Better luck next time...")
+    player_info_arg["location"] = "Black Room"
+    special_item = "Black Ring of Doom"
+    if special_item not in player_info_arg["inventory"]:
+        print("As you enter the room, you see a shiny black ring on a pedestal.")
+        print("\nYou hear clutering noise and voice says pick me up...")
+        decision = input("Do you pick up the ring? [Y|N] > ")
+        if decision.lower() in ["y", "yes"]:
+            print("Sudden room shakes, you fall to your knees and you feel a surge of dark energy coursing through your veins.")
+            print("You are aching in pain and feel nauseus")
+            print("Dark magic drains your energy")
+            player_info_arg["health"] = max(0, player_info_arg["health"] - 10)
+            print("You lost 10 health points.")
+            print("-----------------------------------------------")
+            print("-----------------------------------------------")
+            print("Sudden rush makes you lay on the ground")
+            for i in range(11):
+                print(f"{i}...")
+                time.sleep(1)
+            print("You feel normal again and feel unfazed by what you just wtinessed")
+            player_info_arg["inventory"].append(special_item)
+            print(f"You found a {special_item} and added it to your inventory!")
         else:
-            print("Too high! Might want to turn it down a notch")
+            print("I'm better off without it.")    
+
+    player_info_arg["choices"].append("Black Room")
+    show_player_info(player_info_arg)
+    print("Now, you have to play a game of guess the number to escape.")
+    rules = "You have to guess a number between 1 and 20. You have 5 attempts to guess the correct number. If you guess the number correctly, you win and receive a reward. If you fail to guess the number within 5 attempts, you lose and receive a punishment."
+    print(rules)
+    result = number_guesssing_game()
+    if result:
+        print("The dark spirit rewards you")
+        print("------------------------------------------------")
+        print("Your health is restored by 25 points.")
+        print("------------------------------------------------")
+        player_info_arg["health"] = min(200, player_info_arg["health"] + 25)
+        return "flee"
+    else:
+        print("The dark spirit punishes you for your failure")
+        print("------------------------------------------------")
+        print("You lose 50 hitpoints")
+        print("------------------------------------------------")
+        player_info_arg["health"] = max(0, player_info_arg["health"] - 50)
+        return "flee"       
         
-        player_info_arg["health"] -= guess_damage
-        print(f"Health remaining: {player_info_arg['health']}")
 
-    if player_info_arg["health"] <= 0:
-        you_died("Your luck ran out. The Purple Room claims another unlucky traveler.")
-
-    return player_info_arg
 # ===========================================================================
 # CONTROL FUNCTIONS
 # ===========================================================================
@@ -531,37 +551,6 @@ def get_player_name(player_info_arg):
 
     return player_info_arg
 
-def white_hospital_room(player_info_arg):
-    """A chilling encounter in an abandoned hospital ward."""
-
-    print("\n=== THE WHITE HOSPITAL ROOM ===")
-    print("You step into a eerie white hallway.")
-    print("The light flickers and you hear the door slam behind you.")
-    print("You have to choose quick, right, left, upstairs, or downstairs.")
-
-    player_info_arg["location"] = "White Hospital Room"
-    player_info_arg["health"] -= 15
-
-    item = "old syringe"
-    if item not in player_info_arg["inventory"]:
-        player_info_arg["inventory"].append(item)
-        print(f"You pocket an {item}")
-    
-    player_info_arg["choices"].append("White Hospital Room")
-    show_player_info(player_info_arg)
-
-    SAFE_DIRECTION = 'right'
-    direction = input("[Right | Left | Upstairs | Downstairs | Flee] > ").strip().lower()
-
-    if direction == SAFE_DIRECTION:
-        print("The player found the right path and escapes.")
-        return player_info_arg
-    
-    elif "flee" in direction:
-        return "flee"
-    
-    else:
-        you_died("You have been possessed by the ghost.")
 
 def start_new_adventure(player_info_arg):
     """Presents the three-door choice and routes to the selected room.
@@ -583,9 +572,9 @@ def start_new_adventure(player_info_arg):
 
     while True:
         print_new_dungeon()
-        print("You enter a room, and you see a red door to your left "
+        print("You enter a room, and you see a red  and black door to your left "
               "and blue and green doors to your right.")
-        door_picked = input("Do you pick the red door, blue door, "
+        door_picked = input("Do you pick the red door, black door, blue door, "
                             "or green door? > ")
 
         # We compare only the first few characters so that inputs like
@@ -598,8 +587,10 @@ def start_new_adventure(player_info_arg):
             room_result = blissful_ignorance_of_illusion_room(player_info_arg)
         elif door.startswith("green"):
             room_result = green_magic_room(player_info_arg)
+        elif door.startswith("black"):
+            room_result = black_magic_room(player_info_arg)
         else:
-            print("Sorry, it's either 'red', 'blue', or 'green' as the "
+            print("Sorry, it's either 'red', 'blue', 'black' or 'green' as the "
                   "answer. You're the weakest link, goodbye!")
             # Continue the loop so the player can try again.
             continue
