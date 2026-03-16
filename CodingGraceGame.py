@@ -438,7 +438,47 @@ def green_magic_room(player_info_arg):
         # The player lost — return to the adventure loop.
         print("The magician waves his hand and you are whisked away...\n")
         return "flee"
+def purple_room_of_riddles(player_info_arg):
+    """A room of logic where the player must solve two riddles to pass."""
+    room_name = "Purple Room of Riddles"
+    player_info_arg["location"] = room_name
+    player_info_arg["health"] -= 5         
+    player_info_arg["choices"].append(room_name) 
+    
+    show_player_info(player_info_arg)
 
+    print("\nA purple frog presents itself before you. It declares:")
+    print("'What has cities, but no houses; forests, but no trees;'")
+    print("'I have borders you can't cross, and paths you can't walk. What am I?'")
+
+    action = input("\nYour answer (or type 'flee'): ").strip().lower()
+
+    if action == "flee":
+        return "flee" 
+
+    if "map" in action:
+        print("\nThe frog ribbits: 'Lucky bastard, you won't get so lucky this time.'")
+        print("\n'You keep it, but it never ages. Once shared, it is gone forever.'")
+        print("'I am as light as air, but heavy to hold. What am I?'")
+        
+        second_action = input("\nYour second answer: ").strip().lower()
+        
+        if "secret" in second_action:
+            print("\n'You are as sharp as you are lucky. You may pass.'")
+            item = "Purple Lamp"
+            if item not in player_info_arg["inventory"]: 
+                player_info_arg["inventory"].append(item)
+        else:
+            print("\nIncorrect! The frog croaks a laugh as your secrets leak out like blood.")
+            print("Some things were never meant to be told.")
+            player_info_arg["health"] -= 20
+    else:
+        print("\nIncorrect! The frog strikes you with its tongue.")
+        player_info_arg["health"] -= 20
+
+    if player_info_arg["health"] <= 0:
+        you_died("You've met your wits end.") 
+    return player_info_arg 
 import time
 def number_guesssing_game():    
     number_to_guess = random.randint(1, 20)
