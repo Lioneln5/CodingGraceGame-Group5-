@@ -593,32 +593,13 @@ def get_player_name(player_info_arg):
 
 
 def start_new_adventure(player_info_arg):
-    """Presents the three-door choice and routes to the selected room.
-
-    A while-loop drives the game flow: each iteration shows the dungeon,
-    asks the player to pick a door, and dispatches to the corresponding
-    room function.  If the room returns the string "flee", the loop
-    continues and the doors are presented again.  If the room completes
-    normally (or raises GameOver), the loop ends.
-
-    Using a loop rather than recursion is important here.  If each flee
-    called start_new_adventure() again, every cycle would add a new frame
-    to the call stack, and after enough cycles Python would raise a
-    RecursionError.
-
-    Args:
-        player_info_arg: The player state dictionary.
-    """
-
     while True:
         print_new_dungeon()
-        print("You enter a room, and you see a red  and black door to your left "
-              "and blue and green doors to your right.")
-        door_picked = input("Do you pick the red door, black door, blue door, "
-                            "or green door? > ")
-
-        # We compare only the first few characters so that inputs like
-        # "red door", "blue", or "green one" all work.
+        # Update the prompt so the player knows these doors exist
+        print("You enter a room. You see a red, black, and purple door to your left "
+              "and blue, green, and white doors to your right.")
+        
+        door_picked = input("Do you pick the red, black, blue, green, purple, or white door? > ")
         door = door_picked.strip().lower()
 
         if door.startswith("red"):
@@ -629,14 +610,16 @@ def start_new_adventure(player_info_arg):
             room_result = green_magic_room(player_info_arg)
         elif door.startswith("black"):
             room_result = black_magic_room(player_info_arg)
+        # --- NEW INTEGRATION LINES ---
+        elif door.startswith("purple"):
+            room_result = purple_room_of_riddles(player_info_arg)
+        elif door.startswith("white"):
+            room_result = white_hospital_room(player_info_arg)
+        # ------------------------------
         else:
-            print("Sorry, it's either 'red', 'blue', 'black' or 'green' as the "
-                  "answer. You're the weakest link, goodbye!")
-            # Continue the loop so the player can try again.
+            print("That door doesn't exist! Try again.")
             continue
 
-        # If the room returned "flee", we loop back to the door choice.
-        # If it returned normally (Blue Room after the guard), we break out.
         if room_result != "flee":
             break
 
