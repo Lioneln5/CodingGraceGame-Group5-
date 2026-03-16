@@ -469,7 +469,7 @@ def purple_room_of_riddles(player_info_arg):
             if item not in player_info_arg["inventory"]: 
                 player_info_arg["inventory"].append(item)
         else:
-            print("\nIncorrect! The frog croaks a laugh as your secrets leak out like blood.")
+            print("'\nIncorrect! The frog croaks a laugh as your secrets leak out like blood.'")
             print("Some things were never meant to be told.")
             player_info_arg["health"] -= 20
     else:
