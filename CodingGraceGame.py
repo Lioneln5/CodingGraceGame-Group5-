@@ -500,37 +500,6 @@ def number_guesssing_game():
     print(f"You failed! The number was {number_to_guess}.")
     return False
 
-def white_hospital_room(player_info_arg):
-    """A chilling encounter in an abandoned hospital ward."""
-
-    print("\n=== THE WHITE HOSPITAL ROOM ===")
-    print("You step into a eerie white hallway.")
-    print("The light flickers and you hear the door slam behind you.")
-    print("You have to choose quick, right, left, upstairs, or downstairs.")
-
-    player_info_arg["location"] = "White Hospital Room"
-    player_info_arg["health"] -= 15
-
-    item = "old syringe"
-    if item not in player_info_arg["inventory"]:
-        player_info_arg["inventory"].append(item)
-        print(f"You pocket an {item}")
-    
-    player_info_arg["choices"].append("White Hospital Room")
-    show_player_info(player_info_arg)
-
-    SAFE_DIRECTION = 'right'
-    direction = input("[Right | Left | Upstairs | Downstairs | Flee] > ").strip().lower()
-
-    if direction == SAFE_DIRECTION:
-        print("The player found the right path and escapes.")
-        return player_info_arg
-    
-    elif "flee" in direction:
-        return "flee"
-    
-    else:
-        you_died("You have been possessed by the ghost.")
 
 def black_magic_room(player_info_arg):
 #black magic room play a game of guess the number, 
@@ -699,6 +668,37 @@ def main(player_info_main):
     # capture the final state (e.g., for testing or post-game display).
     return player_info_main
 
+def white_hospital_room(player_info_arg):
+    """A chilling encounter in an abandoned hospital ward."""
+
+    print("\n=== THE WHITE HOSPITAL ROOM ===")
+    print("You step into a eerie white hallway.")
+    print("The light flickers and you hear the door slam behind you.")
+    print("You have to choose quick, right, left, upstairs, or downstairs.")
+
+    player_info_arg["location"] = "White Hospital Room"
+    player_info_arg["health"] -= 15
+
+    item = "old syringe"
+    if item not in player_info_arg["inventory"]:
+        player_info_arg["inventory"].append(item)
+        print(f"You pocket an {item}")
+    
+    player_info_arg["choices"].append("White Hospital Room")
+    show_player_info(player_info_arg)
+
+    SAFE_DIRECTION = 'right'
+    direction = input("[Right | Left | Upstairs | Downstairs | Flee] > ").strip().lower()
+
+    if direction == SAFE_DIRECTION:
+        print("The player found the right path and escapes.")
+        return player_info_arg
+    
+    elif "flee" in direction:
+        return "flee"
+    
+    else:
+        you_died("You have been possessed by the ghost.")
 
 # ===========================================================================
 # ASCII ART FUNCTIONS
