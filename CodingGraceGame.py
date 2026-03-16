@@ -591,15 +591,14 @@ def get_player_name(player_info_arg):
 
     return player_info_arg
 
-
 def start_new_adventure(player_info_arg):
     while True:
         print_new_dungeon()
-        # Update the prompt so the player knows these doors exist
-        print("You enter a room. You see a red, black, and purple door to your left "
-              "and blue, green, and white doors to your right.")
+        # Original prompt with only the three base rooms
+        print("You enter a room. You see a red door to your left "
+              "and blue and green doors to your right.")
         
-        door_picked = input("Do you pick the red, black, blue, green, purple, or white door? > ")
+        door_picked = input("Do you pick the red, blue, or green door? > ")
         door = door_picked.strip().lower()
 
         if door.startswith("red"):
@@ -608,14 +607,6 @@ def start_new_adventure(player_info_arg):
             room_result = blissful_ignorance_of_illusion_room(player_info_arg)
         elif door.startswith("green"):
             room_result = green_magic_room(player_info_arg)
-        elif door.startswith("black"):
-            room_result = black_magic_room(player_info_arg)
-        # --- NEW INTEGRATION LINES ---
-        elif door.startswith("purple"):
-            room_result = purple_room_of_riddles(player_info_arg)
-        elif door.startswith("white"):
-            room_result = white_hospital_room(player_info_arg)
-        # ------------------------------
         else:
             print("That door doesn't exist! Try again.")
             continue
