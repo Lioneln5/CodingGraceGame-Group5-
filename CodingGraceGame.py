@@ -473,7 +473,7 @@ def purple_room_of_riddles(player_info_arg):
             print("Some things were never meant to be told.")
             player_info_arg["health"] -= 20
     else:
-        print("\nIncorrect! The frog strikes you with its tongue.")
+        print("'\nIncorrect! The frog strikes you with its tongue.'")
         player_info_arg["health"] -= 20
 
     if player_info_arg["health"] <= 0:
